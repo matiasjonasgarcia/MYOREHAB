@@ -37,6 +37,7 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
     df_subjects = pd.DataFrame([
         {"Variable": "subject_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "Unique identifier (e.g., 'BR-CMP-S001')", "Key Type": "PK"},
         {"Variable": "center_id", "Data Type": "VARCHAR(10)", "Unit/Format": "Alphanumeric", "Description": "References the center", "Key Type": "FK"},
+        {"Variable": "acronyms", "Data Type": "TEXT", "Unit/Format": "Text", "Description": "acronyms from name and family name", "Key Type": "-"},
         {"Variable": "age", "Data Type": "INTEGER", "Unit/Format": "Years", "Description": "Participant's age", "Key Type": "-"},
         {"Variable": "gender", "Data Type": "VARCHAR(20)", "Unit/Format": "Text", "Description": "Participant's gender", "Key Type": "-"},
         {"Variable": "weight", "Data Type": "NUMERIC(5,2)", "Unit/Format": "Kilograms (kg)", "Description": "Body weight", "Key Type": "-"},
@@ -46,7 +47,12 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
         {"Variable": "laterality", "Data Type": "NUMERIC(5,2)", "Unit/Format": "Score", "Description": "Laterality index (e.g., Edinburgh Inventory)", "Key Type": "-"},
         {"Variable": "nhpeg_dominant", "Data Type": "NUMERIC(6,2)", "Unit/Format": "Seconds (s)", "Description": "NHPT time for dominant hand", "Key Type": "-"},
         {"Variable": "nhpeg_nondominant", "Data Type": "NUMERIC(6,2)", "Unit/Format": "Seconds (s)", "Description": "NHPT time for non-dominant hand", "Key Type": "-"},
-        {"Variable": "injuries", "Data Type": "TEXT", "Unit/Format": "Text", "Description": "Clinical history or relevant upper-limb injuries", "Key Type": "-"}
+        {"Variable": "injuries", "Data Type": "TEXT", "Unit/Format": "Text", "Description": "Clinical history or relevant upper-limb injuries", "Key Type": "-"},
+        {"Variable": "injuries_description", "Data Type": "VARCHAR(20)", "Unit/Format": "Text", "Description": "type of injuries", "Key Type": "-"},
+        {"Variable": "sport", "Data Type": "VARCHAR(20)", "Unit/Format": "Text", "Description": "Participant's sport", "Key Type": "-"},
+        {"Variable": "sport_type", "Data Type": "VARCHAR(20)", "Unit/Format": "Text", "Description": "Type of sport practiced", "Key Type": "-"},
+        {"Variable": "sport_frequency", "Data Type": "VARCHAR(20)", "Unit/Format": "Text", "Description": "Frequency of sport practiced in days in a week", "Key Type": "-"},
+        {"Variable": "temporal_mark", "Data Type": "DATETIME", "Unit/Format": "YYYY-MM-DD HH:MM:SS", "Description": "Timestamp of form submission or data entry", "Key Type": "-"}
     ])
 
     # 3. Equipment Table

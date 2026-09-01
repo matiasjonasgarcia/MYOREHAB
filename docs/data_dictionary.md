@@ -79,6 +79,7 @@ Clinical demographics, physical characteristics, and baseline motor test metrics
 | :--- | :--- | :--- | :--- | :---: |
 | **subject_id** | VARCHAR(15) | Alphanumeric | Unique subject code (e.g., `'BR-CMP-S001'`) | **PK** |
 | **center_id** | VARCHAR(10) | Alphanumeric | Research center key | **FK** |
+| **acronyms** | VARCHAR(10) | Text | Participant's acronyms | - |
 | **age** | INTEGER | Years | Participant's age at acquisition time | - |
 | **gender** | VARCHAR(20) | Text | Participant's self-reported gender | - |
 | **weight** | NUMERIC(5,2) | Kilograms (kg) | Body weight | - |
@@ -89,6 +90,11 @@ Clinical demographics, physical characteristics, and baseline motor test metrics
 | **nhpeg_dominant** | NUMERIC(6,2) | Seconds (s) | Nine-Hole Peg Test performance (Dominant hand) | - |
 | **nhpeg_nondominant** | NUMERIC(6,2) | Seconds (s) | Nine-Hole Peg Test performance (Non-dominant hand) | - |
 | **injuries** | TEXT | Text | Relevant upper-limb injuries or neuromuscular conditions | - |
+|**injuries_description** | TEXT | Text | Type of upper-limb injuries or neuromuscular conditions | - |
+|**sport** | TEXT | Text | Participant's sport | - |
+| **sport_type** | TEXT | Text | Type of sport practiced | - |
+| **sport_frequency** | TEXT | Text | Frequency of sport practiced in days in a week | - |
+| **temporal_mark** | DATETIME | YYYY-MM-DD HH:MM:SS | Timestamp of form submission or data entry | - |
 
 ---
 
