@@ -13,11 +13,11 @@ __pycache__/
 .ipynb_checkpoints/
 
 # ¡MUY IMPORTANTE! Ignorar carpetas de datos
-data/
-*.csv
-*.edf
-*.c3d
-*.txt
+#data/
+#*.csv
+#*.edf
+#*.c3d
+#*.txt
 
 # Archivos de entorno y secretos
 .env
