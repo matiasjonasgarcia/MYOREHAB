@@ -58,6 +58,7 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
     # 3. Equipment Table
     df_equipment = pd.DataFrame([
         {"Variable": "equipment_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "Unique code for the hardware setup", "Key Type": "PK"},
+        {"Variable": "center_id", "Data Type": "VARCHAR(10)", "Unit/Format": "Alphanumeric", "Description": "References the research center", "Key Type": "FK"},
         {"Variable": "signal_type", "Data Type": "VARCHAR(10)", "Unit/Format": "Text", "Description": "Signal modality ('EMG' or 'KINEMATICS')", "Key Type": "-"},
         {"Variable": "brand", "Data Type": "VARCHAR(50)", "Unit/Format": "Text", "Description": "Manufacturer (e.g., 'In-house UNICAMP')", "Key Type": "-"},
         {"Variable": "model", "Data Type": "VARCHAR(50)", "Unit/Format": "Text", "Description": "Hardware model", "Key Type": "-"},
@@ -78,14 +79,15 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
         {"Variable": "recording_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "Unique identifier for the recording file", "Key Type": "PK"},
         {"Variable": "task_id", "Data Type": "VARCHAR(20)", "Unit/Format": "Alphanumeric", "Description": "References the mirrored task/condition", "Key Type": "FK"},
         {"Variable": "equipment_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "References the hardware used", "Key Type": "FK"},
-        {"Variable": "sampling_freq", "Data Type": "NUMERIC(8,2)", "Unit/Format": "Hertz (Hz)", "Description": "Actual sampling frequency", "Key Type": "-"},
-        {"Variable": "file_path", "Data Type": "VARCHAR(255)", "Unit/Format": "Path", "Description": "Relative path in 'emg-raw-renamed/' following pattern 'SNNN_PGA.csv'", "Key Type": "-"}
+        {"Variable": "sampling_freq", "Data Type": "NUMERIC(8,2)", "Unit/Format": "Hertz (Hz)", "Description": "Actual sampling frequency", "Key Type": "-"}
     ])
 
     # 6. EMG Signals Table (128 Channels)
     emg_rows = [
-        {"Variable": "task_id", "Data Type": "VARCHAR(20)", "Unit/Format": "Alphanumeric", "Description": "References the task/trial execution", "Key Type": "FK"},
-        {"Variable": "subject_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "References the participant", "Key Type": "FK"}
+        {"Variable": "emg_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "Unique identifier for the EMG signal metadata entry", "Key Type": "PK"},
+        {"Variable": "recording_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "References the recording session", "Key Type": "FK"},
+        {"Variable": "equipment_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "References the EMG acquisition equipment", "Key Type": "FK"},
+        {"Variable": "file_path", "Data Type": "VARCHAR(255)", "Unit/Format": "Relative Path", "Description": "Relative file path to the raw/renamed sEMG CSV file", "Key Type": "-"}
     ]
     for i in range(1, 65):
         emg_rows.append({
@@ -101,8 +103,10 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
 
     # 7. Kinematics 3D Table
     kin_rows = [
-        {"Variable": "task_id", "Data Type": "VARCHAR(20)", "Unit/Format": "Alphanumeric", "Description": "References the task/trial execution", "Key Type": "FK"},
-        {"Variable": "subject_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "References the participant", "Key Type": "FK"},
+        {"Variable": "kin_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "Unique identifier for the kinematic 3D metadata entry", "Key Type": "PK"},
+        {"Variable": "recording_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "References the recording session", "Key Type": "FK"},
+        {"Variable": "equipment_id", "Data Type": "VARCHAR(15)", "Unit/Format": "Alphanumeric", "Description": "References the kinematic acquisition equipment", "Key Type": "FK"},
+        {"Variable": "file_path", "Data Type": "VARCHAR(255)", "Unit/Format": "Relative Path", "Description": "Relative file path to the 3D kinematics CSV file", "Key Type": "-"},
         {"Variable": "fnum", "Data Type": "INT64", "Unit/Format": "Frame Index", "Description": "Sequential temporal frame index", "Key Type": "-"}
     ]
 
@@ -132,6 +136,13 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
 
     df_kinematics = pd.DataFrame(kin_rows)
 
+    # 8. Videos 3D Table
+    df_videos = pd.DataFrame([
+        {"Variable": "video_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "Unique identifier for the 3D reconstructed video metadata entry", "Key Type": "PK"},
+        {"Variable": "recording_id", "Data Type": "UUID", "Unit/Format": "UUID v4", "Description": "References the recording session", "Key Type": "FK"},
+        {"Variable": "fps", "Data Type": "INTEGER", "Unit/Format": "Frames per second", "Description": "Frame rate of the reconstructed MP4 video", "Key Type": "-"},
+        {"Variable": "file_path", "Data Type": "VARCHAR(255)", "Unit/Format": "Relative Path", "Description": "Relative file path to the 3D reconstructed MP4 video file", "Key Type": "-"}
+    ])
     sheets = {
         "0_Protocol_Naming": df_naming,
         "1_Centers": df_centers,
@@ -140,7 +151,8 @@ def generate_myorehab_dict_excel(output_filename="MYOREHAB_Data_Dictionary.xlsx"
         "4_Tasks": df_tasks,
         "5_Recordings": df_recordings,
         "6_EMG_Signals": df_emg,
-        "7_Kinematics_3D": df_kinematics
+        "7_Kinematics_3D": df_kinematics,
+        "8_Videos_3D": df_videos
     }
 
     # OpenPyXL Styling setup

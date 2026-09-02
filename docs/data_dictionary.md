@@ -104,6 +104,7 @@ Hardware configurations for electrophysiological and optical sensor arrays.
 | Variable | Data Type | Unit / Format | Description | Key Type |
 | :--- | :--- | :--- | :--- | :---: |
 | **equipment_id** | VARCHAR(15) | Alphanumeric | Unique code for the hardware setup | **PK** |
+| **center_id** | VARCHAR(10) | Alphanumeric | Research center key | **FK** |
 | **signal_type** | VARCHAR(10) | Text | Signal modality (`EMG` or `KINEMATICS`) | - |
 | **brand** | VARCHAR(50) | Text | Hardware manufacturer | - |
 | **model** | VARCHAR(50) | Text | Device model / acquisition system | - |
@@ -133,7 +134,6 @@ File-level metadata linking trial tasks to raw data stores on disk.
 | **task_id** | VARCHAR(20) | Alphanumeric | References protocol task | **FK** |
 | **equipment_id** | VARCHAR(15) | Alphanumeric | Hardware system key | **FK** |
 | **sampling_freq** | NUMERIC(8,2) | Hertz (Hz) | Acquisition sampling rate | - |
-| **file_path** | VARCHAR(255) | Path | Relative path (`emg-raw-renamed/SNNN_PGA.csv`) | - |
 
 ---
 
@@ -142,8 +142,10 @@ High-Density Surface Electromyography matrix data (128 total channels).
 
 | Variable Range | Data Type | Unit / Format | Description | Key Type |
 | :--- | :--- | :--- | :--- | :---: |
-| **task_id** | VARCHAR(20) | Alphanumeric | Protocol task identifier | **FK** |
-| **subject_id** | VARCHAR(15) | Alphanumeric | Subject identifier | **FK** |
+| **emg_id** | UUID | UUID v4 | Unique identifier for the EMG signal metadata entry | **PK** |
+| **recording_id** | UUID | UUID v4 | References the recording session | **FK** |
+| **equipment_id** | VARCHAR(15) | Alphanumeric | References the EMG acquisition equipment | **FK** |
+| **file_path** | VARCHAR(255) | Relative Path | Relative file path to the raw/renamed sEMG CSV file | - |
 | **flex_ch1** – **flex_ch64** | FLOAT64 | $\mu\text{V}$ / Digital | 64 HD-sEMG channels placed over forearm flexor muscles | - |
 | **exte_ch1** – **exte_ch64** | FLOAT64 | $\mu\text{V}$ / Digital | 64 HD-sEMG channels placed over forearm extensor muscles | - |
 
@@ -155,9 +157,11 @@ Synchronous 3D kinematic keypoint tracking, confidence scores, and transformatio
 #### Identifiers & Frame Index
 | Variable | Data Type | Unit / Format | Description | Key Type |
 | :--- | :--- | :--- | :--- | :---: |
-| **task_id** | VARCHAR(20) | Alphanumeric | Protocol task key | **FK** |
-| **subject_id** | VARCHAR(15) | Alphanumeric | Subject key | **FK** |
-| **fnum** | INT64 | Frame Index | Sequential frame counter | - |
+| **kin_id** | UUID | UUID v4 | Unique identifier for the kinematic 3D metadata entry | **PK** |
+| **recording_id** | UUID | UUID v4 | References the recording session | **FK** |
+| **equipment_id** | VARCHAR(15) | Alphanumeric | References the kinematic acquisition equipment | **FK** |
+| **file_path** | VARCHAR(255) | Relative Path | Relative file path to the 3D kinematics CSV file | - |
+| **fnum** | INT64 | Frame Index | Sequential temporal frame index | - |
 
 #### Joint Keypoint Quadruplets & Quality Metrics (21 Keypoints $\times$ 6 Attributes = 126 Columns)
 *Tracked Keypoints:* `wrist`, `thumb_cmc`, `thumb_mcp`, `thumb_ip`, `thumb_tip`, `index_finger_mcp`, `index_finger_pip`, `index_finger_dip`, `index_finger_tip`, `middle_finger_mcp`, `middle_finger_pip`, `middle_finger_dip`, `middle_finger_tip`, `ring_finger_mcp`, `ring_finger_pip`, `ring_finger_dip`, `ring_finger_tip`, `pinky_mcp`, `pinky_pip`, `pinky_dip`, `pinky_tip`.
@@ -187,3 +191,15 @@ For each keypoint `[joint]`:
 | :--- | :--- | :--- | :--- |
 | **m_00** – **m_22** | FLOAT64 | Matrix Element | 9 elements of the $3 \times 3$ coordinate rotation matrix $\mathbf{M}$ |
 | **center_0** – **center_2** | FLOAT64 | Spatial Coords | 3D origin center coordinates $(x_0, y_0, z_0)$ |
+
+---
+
+### 3.9. `8_Videos_3D`
+Metadata mapping rendered/reconstructed 3D kinematics visualization videos to their source recordings.
+
+| Variable | Data Type | Unit / Format | Description | Key Type |
+| :--- | :--- | :--- | :--- | :---: |
+| **video_id** | UUID | UUID v4 | Unique identifier for the 3D reconstructed video metadata entry | **PK** |
+| **recording_id** | UUID | UUID v4 | References the recording session | **FK** |
+| **fps** | INTEGER | Frames per sec | Frame rate of the reconstructed MP4 video | - |
+| **file_path** | VARCHAR(255) | Relative Path | Relative file path to the 3D reconstructed MP4 video file | - |
